@@ -1,0 +1,16 @@
+ <ddr-button-multiple
+    [buttons]="buttons"
+    (action)="clickButton($event)" />
+
+<div>
+  {{'success' | ddrTranslate}}
+  <ddr-button text="Change to Spanish" (action)="changeToSpanish()" />
+  <ddr-button text="Change to English" (action)="changeToEnglish()" />
+</div>
+
+<div>
+  <ddr-toggle 
+    class="me-2"
+    size="small"
+     (toggled)="toggleValue($event)" />
+</div>
