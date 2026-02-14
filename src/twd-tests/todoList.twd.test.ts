@@ -120,7 +120,7 @@ describe("Todo List Page", () => {
     await userEvent.click(deleteButton);
     await twd.waitForRequest("deleteTodo");
     await twd.waitForRequest("getTodoList");
-
+    await twd.wait(500);
     // Wait for Angular to re-render after the mocked response
     const remaining = await screenDom.findByText("Build Todo App");
     twd.should(remaining, "be.visible");
