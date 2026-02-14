@@ -1,28 +1,23 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { DdrButtonComponent, DdrCardComponent, DdrInputComponent } from 'ddr-ng';
-
-interface Todo {
-  id: string;
-  title: string;
-  description: string;
-  date: string;
-}
+import { Todo } from './models/todo.model';
+import { TodoService } from './services/todo.service';
 
 @Component({
   selector: 'app-todo-list',
-  imports: [FormsModule, DdrButtonComponent, DdrCardComponent, DdrInputComponent],
+  imports: [ReactiveFormsModule, DdrButtonComponent, DdrCardComponent, DdrInputComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <h1>Todo List</h1>
 
     <ddr-card class="mb-3">
       <div card-title>Create a new todo</div>
       <div card-content>
-        <form (ngSubmit)="createTodo()">
-          <ddr-input label="Title" name="title" [(ngModel)]="title" />
-          <ddr-input label="Description" name="description" [(ngModel)]="description" />
-          <ddr-input label="Date" name="date" [(ngModel)]="date" />
+        <form [formGroup]="todoForm" (ngSubmit)="createTodo()">
+          <ddr-input label="Title" name="title" formControlName="title" />
+          <ddr-input label="Description" name="description" formControlName="description" />
+          <ddr-input label="Date" name="date" formControlName="date" />
           <ddr-button text="Create Todo" type="submit" />
         </form>
       </div>
@@ -45,35 +40,36 @@ interface Todo {
   `,
 })
 export class TodoListComponent implements OnInit {
-  private http = inject(HttpClient);
+  private todoService = inject(TodoService);
 
   todos = signal<Todo[]>([]);
-  title = '';
-  description = '';
-  date = '';
+  todoForm = new FormGroup({
+    title: new FormControl(''),
+    description: new FormControl(''),
+    date: new FormControl(''),
+  });
 
   ngOnInit() {
     this.loadTodos();
   }
 
   loadTodos() {
-    this.http.get<Todo[]>('/api/todos').subscribe((todos) => {
+    this.todoService.getTodos().subscribe((todos) => {
       this.todos.set(todos);
     });
   }
 
   createTodo() {
-    const body = { title: this.title, description: this.description, date: this.date };
-    this.http.post<Todo>('/api/todos', body).subscribe(() => {
-      this.title = '';
-      this.description = '';
-      this.date = '';
+    const { title, description, date } = this.todoForm.value;
+    const body = { title: title ?? '', description: description ?? '', date: date ?? '' };
+    this.todoService.createTodo(body).subscribe(() => {
+      this.todoForm.reset();
       this.loadTodos();
     });
   }
 
   deleteTodo(id: string) {
-    this.http.delete(`/api/todos/${id}`).subscribe(() => {
+    this.todoService.deleteTodo(id).subscribe(() => {
       this.loadTodos();
     });
   }

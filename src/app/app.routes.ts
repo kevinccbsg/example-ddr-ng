@@ -1,10 +1,7 @@
 import { Routes } from '@angular/router';
-import { HelloWorldComponent } from './hello-world';
-import { NotFoundComponent } from './not-found';
-import { TodoListComponent } from './todo-list';
 
 export const routes: Routes = [
-  { path: '', component: HelloWorldComponent },
-  { path: 'todos', component: TodoListComponent },
-  { path: '**', component: NotFoundComponent },
+  { path: '', loadComponent: () => import('./hello-world').then((m) => m.HelloWorldComponent) },
+  { path: 'todos', loadComponent: () => import('./todo-list').then((m) => m.TodoListComponent) },
+  { path: '**', loadComponent: () => import('./not-found').then((m) => m.NotFoundComponent) },
 ];
