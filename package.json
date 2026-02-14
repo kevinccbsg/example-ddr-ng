@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "twd:relay": "twd-relay --port 9876",
+    "twd:run": "twd-relay run --port 9876"
   },
   "prettier": {
     "printWidth": 100,
@@ -38,6 +40,8 @@
     "@angular/cli": "^21.1.2",
     "@angular/compiler-cli": "^21.1.0",
     "jsdom": "^27.1.0",
+    "twd-js": "^1.5.2",
+    "twd-relay": "^0.2.1",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }

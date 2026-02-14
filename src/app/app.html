@@ -1,16 +1,8 @@
- <ddr-button-multiple
-    [buttons]="buttons"
-    (action)="clickButton($event)" />
+<nav class="app-nav">
+  <ddr-button text="Home" icon="bi bi-house" (action)="navigateTo('/')" />
+  <ddr-button text="Todos" icon="bi bi-list-check" (action)="navigateTo('/todos')" />
+</nav>
 
-<div>
-  {{'success' | ddrTranslate}}
-  <ddr-button text="Change to Spanish" (action)="changeToSpanish()" />
-  <ddr-button text="Change to English" (action)="changeToEnglish()" />
-</div>
-
-<div>
-  <ddr-toggle 
-    class="me-2"
-    size="small"
-     (toggled)="toggleValue($event)" />
-</div>
+<main class="app-content">
+  <router-outlet />
+</main>
